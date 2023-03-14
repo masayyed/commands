@@ -1,0 +1,17 @@
+openssl genrsa -out private.key 4096
+
+openssl req -new -sha256     -out private.csr     -key private.key     -config ssl.conf
+
+cat private.csr
+cat private.key
+
+openssl req -text -noout -in private.csr
+
+openssl x509 -req     -sha256     -days 3650     -in private.csr     -signkey private.key     -out private.crt     -extensions req_ext     -extfile ssl.conf
+
+cat private.crt
+cat private.csr
+cat private.key
+
+cp private.key hvrhubserver.priv_key
+cp private.crt hvrhubserver.pub_cert
