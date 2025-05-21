@@ -13,14 +13,18 @@ cat private.crt
 cat private.csr
 cat private.key
 
-cp private.key hvrhubserver.priv_key
-cp private.crt hvrhubserver.pub_cert
+mv private.crt dal.crt
+mv private.key dal.key
+cat dal.crt >> dal.pem
+cat dal.key >> dal.pem
+
+----- Java sopported certificates
 
 1. Convert the Private Key and Certificate to PKCS12 Format
 
 openssl pkcs12 -export \
-    -in private.crt \
-    -inkey private.key \
+    -in dal.crt \
+    -inkey dal.key \
     -out keystore.p12 \
     -name dal \
     -passout pass:changeit  # Replace 'changeit' with your password
@@ -39,7 +43,7 @@ keytool -importkeystore \
 3. Create a Truststore (Optional)
 
 keytool -importcert \
-    -file private.crt \
+    -file dal.crt \
     -alias dal \
     -keystore dal-truststore.jks \
     -storepass changeit \
@@ -50,4 +54,5 @@ keytool -importcert \
 keytool -list -v -keystore dal-keystore.jks -storepass changeit
 
 keytool -list -v -keystore dal-truststore.jks -storepass changeit
+
 
